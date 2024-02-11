@@ -7,7 +7,7 @@ import time
 import mediapipe as mp
 from mediapipe.tasks.python import vision
 
-model_path = 'gesture_recognizer.task'
+model_path = 'hand_landmark.task'
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -16,6 +16,8 @@ mp_hands = mp.solutions.hands
 cap = cv2.VideoCapture("video_test.mp4")
 # ACTION: Read live video from webcam
 # cap = cv2.VideoCapture(0)
+start_time = time.time()
+frame_counter = 0
 with mp_hands.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
@@ -24,9 +26,13 @@ with mp_hands.Hands(
     while True:
     # ACTION: Live feed-in case
     # while cap.isOpened():
-        # reading from frame 
+        # reading from frame
         success, frame = cap.read()
         if success:
+            frame_counter += 1
+            fps = frame_counter / (time.time() - start_time)
+            cv2.putText(frame, f"FPS: {fps:.3f}", (30, 30), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 255), 2, cv2.LINE_AA)
+
             # To improve performance, optionally mark the image as not writeable to
             # pass by reference.
             frame.flags.writeable = False
