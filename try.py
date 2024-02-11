@@ -13,9 +13,9 @@ mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
      
 # TEST: Load the video from specified path
-cap = cv2.VideoCapture("video_test.mp4")
+# cap = cv2.VideoCapture("video_test.mp4")
 # ACTION: Read live video from webcam
-# cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 start_time = time.time()
 frame_counter = 0
 with mp_hands.Hands(
@@ -23,9 +23,9 @@ with mp_hands.Hands(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as hands:
     # TEST: mp4 feed-in case
-    while True:
+    # while True:
     # ACTION: Live feed-in case
-    # while cap.isOpened():
+    while cap.isOpened():
         # reading from frame
         success, frame = cap.read()
         if success:
@@ -56,11 +56,11 @@ with mp_hands.Hands(
                 break
         else:
             # TEST: directly exit
-            break
+            # break
             # ACTION: Ignore empty frame
-            # print("Ignoring empty camera frame.")
+            print("Ignoring empty camera frame.")
             # continue
-        time.sleep(0.1)
+        # time.sleep(0.1)
 
 # Release all space and windows once done 
 cap.release()
