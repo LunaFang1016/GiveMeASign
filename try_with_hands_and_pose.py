@@ -10,7 +10,7 @@ from mediapipe.tasks.python import vision
 model_path = 'hand_landmark.task'
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
-mp_hands = mp.solutions.holistic
+mp_hands_pose = mp.solutions.holistic
      
 # TEST: Load the video from specified path
 # cap = cv2.VideoCapture("video_test.mp4")
@@ -18,7 +18,7 @@ mp_hands = mp.solutions.holistic
 cap = cv2.VideoCapture(1)
 start_time = time.time()
 frame_counter = 0
-with mp_hands.Hands(
+with mp_hands_pose.Hands(
     model_complexity=0,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5) as hands:
@@ -47,7 +47,7 @@ with mp_hands.Hands(
                     mp_drawing.draw_landmarks(
                         frame,
                         hand_landmarks,
-                        mp_hands.HAND_CONNECTIONS,
+                        mp_hands_pose.HAND_CONNECTIONS,
                         mp_drawing_styles.get_default_hand_landmarks_style(),
                         mp_drawing_styles.get_default_hand_connections_style())
             # Flip the frame horizontally for a selfie-view display.
