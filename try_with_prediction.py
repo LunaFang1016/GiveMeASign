@@ -35,7 +35,7 @@ def process_prediction(prediction):
     print(predicted_label)
     return predicted_label
 
-mp_model_path = 'hand_landmark.task'
+model_path = 'hand_landmark.task'
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 mp_hands = mp.solutions.hands
@@ -89,10 +89,10 @@ with mp_hands.Hands(
                     cv2.putText(frame, predicted_gesture, (250,250), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
 
-        # # Display the frame with hand landmarks and predicted gesture label
-        # cv2.imshow('MediaPipe Hands', cv2.flip(frame, 1))
-        # if cv2.waitKey(5) & 0xFF == 27:
-        #     break
+        # Display the frame with hand landmarks and predicted gesture label
+        cv2.imshow('MediaPipe Hands', cv2.flip(frame, 1))
+        if cv2.waitKey(5) & 0xFF == 27:
+            break
 
 
             # Flip the frame horizontally for a selfie-view display.
