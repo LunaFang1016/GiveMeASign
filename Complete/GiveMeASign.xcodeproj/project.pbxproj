@@ -19,7 +19,7 @@
 /* Begin PBXFileReference section */
 		FA13F9F424783EF10040E4F4 /* CapturedImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedImageView.swift; sourceTree = "<group>"; };
 		FA13F9F6247993360040E4F4 /* ViewController+Extras.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extras.swift"; sourceTree = "<group>"; };
-		FA92FA542476EB4A00EEE1F1 /* CustomCamera.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomCamera.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA92FA542476EB4A00EEE1F1 /* GiveMeASign.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GiveMeASign.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA92FA572476EB4A00EEE1F1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FA92FA592476EB4A00EEE1F1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FA92FA5B2476EB4A00EEE1F1 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -50,7 +50,7 @@
 		FA92FA552476EB4A00EEE1F1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FA92FA542476EB4A00EEE1F1 /* CustomCamera.app */,
+				FA92FA542476EB4A00EEE1F1 /* GiveMeASign.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,9 +73,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FA92FA532476EB4A00EEE1F1 /* CustomCamera */ = {
+		FA92FA532476EB4A00EEE1F1 /* GiveMeASign */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FA92FA682476EB4C00EEE1F1 /* Build configuration list for PBXNativeTarget "CustomCamera" */;
+			buildConfigurationList = FA92FA682476EB4C00EEE1F1 /* Build configuration list for PBXNativeTarget "GiveMeASign" */;
 			buildPhases = (
 				FA92FA502476EB4A00EEE1F1 /* Sources */,
 				FA92FA512476EB4A00EEE1F1 /* Frameworks */,
@@ -85,9 +85,9 @@
 			);
 			dependencies = (
 			);
-			name = CustomCamera;
+			name = GiveMeASign;
 			productName = MetalCamera;
-			productReference = FA92FA542476EB4A00EEE1F1 /* CustomCamera.app */;
+			productReference = FA92FA542476EB4A00EEE1F1 /* GiveMeASign.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -98,14 +98,14 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
 				LastUpgradeCheck = 1140;
-				ORGANIZATIONNAME = ca.alexs;
+				ORGANIZATIONNAME = cmu;
 				TargetAttributes = {
 					FA92FA532476EB4A00EEE1F1 = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
 				};
 			};
-			buildConfigurationList = FA92FA4F2476EB4A00EEE1F1 /* Build configuration list for PBXProject "CustomCamera" */;
+			buildConfigurationList = FA92FA4F2476EB4A00EEE1F1 /* Build configuration list for PBXProject "GiveMeASign" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -118,7 +118,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FA92FA532476EB4A00EEE1F1 /* CustomCamera */,
+				FA92FA532476EB4A00EEE1F1 /* GiveMeASign */,
 			);
 		};
 /* End PBXProject section */
@@ -280,16 +280,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = YB435W5MT8;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XLP25JV5M7;
 				INFOPLIST_FILE = CustomCamera/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GiveMeASign;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.alexs.CustomCamera;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cmu.e1.GiveMeASign;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -299,16 +308,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = YB435W5MT8;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = XLP25JV5M7;
 				INFOPLIST_FILE = CustomCamera/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = GiveMeASign;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = ca.alexs.CustomCamera;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = cmu.e1.GiveMeASign;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -317,7 +335,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FA92FA4F2476EB4A00EEE1F1 /* Build configuration list for PBXProject "CustomCamera" */ = {
+		FA92FA4F2476EB4A00EEE1F1 /* Build configuration list for PBXProject "GiveMeASign" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FA92FA662476EB4C00EEE1F1 /* Debug */,
@@ -326,7 +344,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FA92FA682476EB4C00EEE1F1 /* Build configuration list for PBXNativeTarget "CustomCamera" */ = {
+		FA92FA682476EB4C00EEE1F1 /* Build configuration list for PBXNativeTarget "GiveMeASign" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FA92FA692476EB4C00EEE1F1 /* Debug */,

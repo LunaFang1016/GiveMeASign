@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FA92FA532476EB4A00EEE1F1"
-               BuildableName = "CustomCamera.app"
-               BlueprintName = "CustomCamera"
-               ReferencedContainer = "container:CustomCamera.xcodeproj">
+               BuildableName = "GiveMeASign.app"
+               BlueprintName = "GiveMeASign"
+               ReferencedContainer = "container:GiveMeASign.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FA92FA532476EB4A00EEE1F1"
-            BuildableName = "CustomCamera.app"
-            BlueprintName = "CustomCamera"
-            ReferencedContainer = "container:CustomCamera.xcodeproj">
+            BuildableName = "GiveMeASign.app"
+            BlueprintName = "GiveMeASign"
+            ReferencedContainer = "container:GiveMeASign.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FA92FA532476EB4A00EEE1F1"
-            BuildableName = "CustomCamera.app"
-            BlueprintName = "CustomCamera"
-            ReferencedContainer = "container:CustomCamera.xcodeproj">
+            BuildableName = "GiveMeASign.app"
+            BlueprintName = "GiveMeASign"
+            ReferencedContainer = "container:GiveMeASign.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
