@@ -10,7 +10,8 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-labels = ["hello", "howAre", "love"]
+
+labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
 
 # Function to load and preprocess the data
 def load_data(dataset_folder, mp_holistic):
@@ -36,8 +37,9 @@ def extract_features(video_path, mp_holistic):
         # Read video frames
         cap = cv2.VideoCapture(video_path)
         features = []
-        left_hand_landmarks_empty = np.zeros(21 * 3)  # Assuming 21 landmarks per hand
-        right_hand_landmarks_empty = np.zeros(21 * 3)  # Assuming 21 landmarks per hand
+        left_hand_landmarks_empty = np.zeros(21 * 3)
+        right_hand_landmarks_empty = np.zeros(21 * 3)
+        pose_landmarks_empty = np.zeros(33 * 3)
         max_feature_length = 0
         while cap.isOpened():
             ret, frame = cap.read()
@@ -55,8 +57,8 @@ def extract_features(video_path, mp_holistic):
             # print("here")
             if results.pose_landmarks:
                 pose_landmarks = np.array([[lm.x, lm.y, lm.z] for lm in results.pose_landmarks.landmark]).flatten()
-            # else:
-            #     pose_landmarks = {}
+            else:
+                pose_landmarks = pose_landmarks_empty
             if results.left_hand_landmarks:
                 left_hand_landmarks = np.array([[lm.x, lm.y, lm.z] for lm in results.left_hand_landmarks.landmark]).flatten()
             else:
@@ -82,10 +84,13 @@ def extract_features(video_path, mp_holistic):
             padded_feature = feature
         padded_features.append(padded_feature)
 
+    padded_features = np.array(padded_features)
+    print("Shape of padded_features:", padded_features.shape)
+
     return np.array(features)
 
 # Load the dataset
-dataset_folder = 'datasets/Videos'
+dataset_folder = 'datasets/extracted_rar/Videos'
 mp_holistic = mp.solutions.holistic
 X, y = load_data(dataset_folder, mp_holistic)
 
@@ -106,30 +111,38 @@ y_test_onehot = np.eye(num_classes)[y_test_encoded]
 model = Sequential()
 print("X_train shape:", X_train.shape)
 model.add(LSTM(64, return_sequences=True, input_shape=(X_train.shape[1], X_train.shape[2])))
-model.add(LSTM(32, return_sequences=False))
-model.add(Dense(num_classes, activation='softmax'))  # Adjust the output dimension based on the number of classes
+model.add(LSTM(32, return_sequences=True))
+model.add(LSTM(16, return_sequences=False))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(num_classes, activation='softmax'))
 
 # Compile the model
 model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Train the model
-model.fit(X_train, y_train_onehot, epochs=10, batch_size=32, validation_data=(X_test, y_test_onehot))
+history = model.fit(X_train, y_train_onehot, epochs=100, batch_size=32, validation_data=(X_test, y_test_onehot))
+
+plt.plot(history.history['accuracy'], label='Training Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.xlabel('Epoch')
+plt.ylabel('Accuracy')
+plt.title('Training and Validation Accuracy')
+plt.legend()
+plt.savefig('training_validation_accuracy.png')
+plt.show()
 
 # Evaluate the model
 loss, accuracy = model.evaluate(X_test, y_test_onehot)
 print(f'Test Loss: {loss}, Test Accuracy: {accuracy}')
 
 # Save the model
-model.save('sign_language_recognition_model.h5')
-
+model.save('sign_language_recognition_model2.h5')
 
 y_pred = model.predict(X_test)
 y_pred_classes = np.argmax(y_pred, axis=1)
 
-# Calculate confusion matrix
+# Calculate and plot confusion matrix
 conf_matrix = confusion_matrix(np.argmax(y_test_onehot, axis=1), y_pred_classes)
-
-# Plot confusion matrix
 plt.figure(figsize=(8, 6))
 sns.heatmap(conf_matrix, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels)
 plt.xlabel('Predicted labels')
