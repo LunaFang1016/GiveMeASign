@@ -39,7 +39,11 @@ def process_prediction(prediction):
     class_index = np.argmax(prediction)
     labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
     predicted_label = labels[class_index]
-    print(predicted_label)
+    for i, prob in enumerate(prediction[0]):
+        print(f"{labels[i]}: {prob:.4f}")
+    
+    predicted_label = labels[class_index]
+    print(f"Predicted label: {predicted_label}")
     return predicted_label
 
 
