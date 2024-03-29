@@ -3,9 +3,55 @@ import numpy as np
 import mediapipe as mp
 from keras.models import load_model
 import time
+from openai import OpenAI
+client = OpenAI()
 
 model = load_model('signs_10.h5')
 labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
+
+# model = load_model('signs_20.h5')
+# labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you",
+#           "afternoon", "angry", "bye", "chair", "computer", "confused", "drink", "eat", "evening", 
+#           "excited"]
+
+MIN_API_INTERVAL = 5  # Adjust as needed
+
+last_api_call_time = 0
+
+def translate_llm(predicted_text):
+    global last_api_call_time
+
+    # Calculate time elapsed since the last API call
+    # current_time = time.time()
+    # time_elapsed = current_time - last_api_call_time
+
+    # # If the minimum API interval has not elapsed, wait before making the next call
+    # if time_elapsed < MIN_API_INTERVAL:
+    #     time.sleep(MIN_API_INTERVAL - time_elapsed)
+
+    prompt = "You will be given a list of words predicted by a sign language recognition model. Translate the sign language sentences into readable English:\n\n"
+    prompt += "For example, if you are given 'hello mask where please', translate it to 'hello please wear your mask'.\n\n"
+    prompt += "If you are not given anything, do not translate anything.\n\n"
+    prompt += "Here is the list of predicted words:\n"
+    prompt += f"{predicted_text}\n"
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",  # Choose the appropriate GPT model
+        messages=[{"role": "system", "content": prompt}],
+        max_tokens=20,  # Adjust the length of generated text
+        n=10  # Number of texts to translate in a single request
+    )
+    # Update the timestamp of the last API call
+    last_api_call_time = time.time()
+
+    if response.choices:
+        completion_message = response.choices[0].message
+        if completion_message:
+            text = completion_message.content
+            print(text)
+    
+    return text
+
 
 def extract_features_from_webcam(mp_holistic):
     with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
@@ -23,7 +69,9 @@ def extract_features_from_webcam(mp_holistic):
         predicted_words = []
         last_right_hand_detected_time = time.time()
         last_left_hand_detected_time = time.time()
-        previous_predicted_text = ''  # Store previous predicted text
+        previous_predicted_text = ''
+        prev_llm = ''
+        curr_llm = ''
         
         while True:
             ret, frame = cap.read()
@@ -79,16 +127,23 @@ def extract_features_from_webcam(mp_holistic):
                 print(predicted_words)
                 predicted_words = []
                 frames_processed = 0
-                previous_predicted_text = ''  # Clear previous text if hands are not detected
+                previous_predicted_text = ''
+                prev_llm = ''
+                curr_llm = ''
                 continue
 
-            # Update previous predicted text only if it has changed
+            # Update previous and current predicted text
             current_predicted_text = " ".join(predicted_words)
             if current_predicted_text != previous_predicted_text and current_predicted_text != '':
                 previous_predicted_text = current_predicted_text
+                prev_llm = curr_llm
+                curr_llm = translate_llm(previous_predicted_text)
 
-            # Display previous predicted text
+            # Draw previous and current translation text
             cv2.putText(frame, previous_predicted_text, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            # cv2.putText(frame, prev_llm, (50, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+            print(curr_llm)
+            cv2.putText(frame, curr_llm, (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
             cv2.imshow('Sign Language Recognition', frame)
 
