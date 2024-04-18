@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -37,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'givemeasign'
+    'givemeasign',
+    # 'webpack_loader'
 ]
 
 MIDDLEWARE = [
@@ -51,6 +53,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'webapps.urls'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "givemeasign/static"),
+)
 
 TEMPLATES = [
     {
@@ -69,6 +74,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'webapps.wsgi.application'
+
+# # Webpack loader
+# WEBPACK_LOADER = {
+#     'DEFAULT': {
+#         'CACHE': not DEBUG,
+#         'BUNDLE_DIR_NAME': 'webpack_bundles/', # must end with slash
+#         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
+#         'POLL_INTERVAL': 0.1,
+#         'TIMEOUT': None,
+#         'IGNORE': ['.+\.hot-update.js', '.+\.map']
+#     }
+# }
 
 
 # Database
@@ -116,7 +133,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
