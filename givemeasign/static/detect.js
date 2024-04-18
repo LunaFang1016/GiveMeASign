@@ -14,20 +14,23 @@
 
 import {
   HandLandmarker,
-  FilesetResolver
+  PoseLandmarker,
+  FilesetResolver,
+  DrawingUtils
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
 const demosSection = document.getElementById("demos");
 
 let handLandmarker = undefined;
+let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton = document.createElement("button");
 let webcamRunning = false;
 
-// Before we can use HandLandmarker class we must wait for it to finish
+// Before we can use HandLandmarker and PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
 // get everything needed to run.
-const createHandLandmarker = async () => {
+const createLandmarker = async () => {
   const vision = await FilesetResolver.forVisionTasks(
     "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0/wasm"
   );
@@ -39,77 +42,20 @@ const createHandLandmarker = async () => {
     runningMode: runningMode,
     numHands: 2
   });
+  poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+    baseOptions: {
+      modelAssetPath: `https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task`,
+      delegate: "GPU"
+    },
+    runningMode: runningMode,
+    numPoses: 2
+  });
   demosSection.classList.remove("invisible");
 };
-createHandLandmarker();
+createLandmarker();
 
 /********************************************************************
-// Demo 1: Grab a bunch of images from the page and detection them
-// upon click.
-********************************************************************/
-
-// In this demo, we have put all our clickable images in divs with the
-// CSS class 'detectionOnClick'. Lets get all the elements that have
-// this class.
-const imageContainers = document.getElementsByClassName("detectOnClick");
-
-// Now let's go through all of these and add a click event listener.
-for (let i = 0; i < imageContainers.length; i++) {
-  // Add event listener to the child element whichis the img element.
-  imageContainers[i].children[0].addEventListener("click", handleClick);
-}
-
-// When an image is clicked, let's detect it and display results!
-async function handleClick(event) {
-  if (!handLandmarker) {
-    console.log("Wait for handLandmarker to load before clicking!");
-    return;
-  }
-
-  if (runningMode === "VIDEO") {
-    runningMode = "IMAGE";
-    await handLandmarker.setOptions({ runningMode: "IMAGE" });
-  }
-  // Remove all landmarks drawed before
-  const allCanvas = event.target.parentNode.getElementsByClassName("canvas");
-  for (var i = allCanvas.length - 1; i >= 0; i--) {
-    const n = allCanvas[i];
-    n.parentNode.removeChild(n);
-  }
-
-  // We can call handLandmarker.detect as many times as we like with
-  // different image data each time. This returns a promise
-  // which we wait to complete and then call a function to
-  // print out the results of the prediction.
-  const handLandmarkerResult = handLandmarker.detect(event.target);
-  console.log(handLandmarkerResult.handednesses[0][0]);
-  const canvas = document.createElement("canvas");
-  canvas.setAttribute("class", "canvas");
-  canvas.setAttribute("width", event.target.naturalWidth + "px");
-  canvas.setAttribute("height", event.target.naturalHeight + "px");
-  canvas.style =
-    "left: 0px;" +
-    "top: 0px;" +
-    "width: " +
-    event.target.width +
-    "px;" +
-    "height: " +
-    event.target.height +
-    "px;";
-
-  event.target.parentNode.appendChild(canvas);
-  const cxt = canvas.getContext("2d");
-  for (const landmarks of handLandmarkerResult.landmarks) {
-    drawConnectors(cxt, landmarks, HAND_CONNECTIONS, {
-      color: "#00FF00",
-      lineWidth: 5
-    });
-    drawLandmarks(cxt, landmarks, { color: "#FF0000", lineWidth: 1 });
-  }
-}
-
-/********************************************************************
-// Demo 2: Continuously grab image from webcam stream and detect it.
+// Continuously grab image from webcam stream and detect it.
 ********************************************************************/
 
 const video = document.getElementById("webcam");
@@ -119,6 +65,7 @@ const canvasElement = document.getElementById(
 )
 canvasElement.type = HTMLCanvasElement;
 const canvasCtx = canvasElement.getContext("2d");
+const drawingUtils = new DrawingUtils(canvasCtx);
 
 // Check if webcam access is supported.
 const hasGetUserMedia = () => !!navigator.mediaDevices?.getUserMedia;
@@ -134,7 +81,7 @@ if (hasGetUserMedia()) {
 
 // Enable the live webcam view and start detection.
 function enableCam(event) {
-  if (!handLandmarker) {
+  if (!handLandmarker || !poseLandmarker) {
     console.log("Wait! objectDetector not loaded yet.");
     return;
   }
@@ -161,6 +108,8 @@ function enableCam(event) {
 
 let lastVideoTime = -1;
 let results = undefined;
+let pose_results = undefined;
+
 console.log(video);
 async function predictWebcam() {
   canvasElement.style.width = video.videoWidth;;
@@ -172,11 +121,13 @@ async function predictWebcam() {
   if (runningMode === "IMAGE") {
     runningMode = "VIDEO";
     await handLandmarker.setOptions({ runningMode: "VIDEO" });
+    await poseLandmarker.setOptions({ runningMode: "VIDEO" })
   }
   let startTimeMs = performance.now();
   if (lastVideoTime !== video.currentTime) {
     lastVideoTime = video.currentTime;
     results = handLandmarker.detectForVideo(video, startTimeMs);
+    pose_results = poseLandmarker.detectForVideo(video, startTimeMs);
   }
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
@@ -187,6 +138,14 @@ async function predictWebcam() {
         lineWidth: 5
       });
       drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+    }
+  }
+  if (pose_results.landmarks) {
+    for (const landmark of pose_results.landmarks) {
+      drawingUtils.drawLandmarks(landmark, {
+        radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1)
+      });
+      drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
     }
   }
   canvasCtx.restore();
