@@ -11,6 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+"use strict"
 
 import {
   HandLandmarker,
@@ -108,7 +109,10 @@ function enableCam(event) {
 
 let lastVideoTime = -1;
 let results = undefined;
-let pose_results = undefined;
+let poseResults = undefined;
+let last_hand_detect_time = -1;
+var myResults = [];
+let rawLandmarks = [];
 
 console.log(video);
 async function predictWebcam() {
@@ -116,6 +120,8 @@ async function predictWebcam() {
   canvasElement.style.height = video.videoHeight;
   canvasElement.width = video.videoWidth;
   canvasElement.height = video.videoHeight;
+  let poseLandmarksRaw = [];
+  let handLandmarksRaw = [];
   
   // Now let's start detecting the stream.
   if (runningMode === "IMAGE") {
@@ -127,31 +133,145 @@ async function predictWebcam() {
   if (lastVideoTime !== video.currentTime) {
     lastVideoTime = video.currentTime;
     results = handLandmarker.detectForVideo(video, startTimeMs);
-    pose_results = poseLandmarker.detectForVideo(video, startTimeMs);
+    poseResults = poseLandmarker.detectForVideo(video, startTimeMs);
   }
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   if (results.landmarks) {
+    last_hand_detect_time = Date.now();
     for (const landmarks of results.landmarks) {
+      // myResults.push(landmarks);
+      // console.log("hands", landmarks);
+      // console.log("keys", Object.keys(landmarks));
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
         color: "#00FF00",
         lineWidth: 5
       });
       drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+      for (let j = 0; j < 21; j ++) {
+        if (landmarks.hasOwnProperty(j)) {
+          handLandmarksRaw.push([landmarks[j].x, landmarks[j].y, landmarks[j].z]);
+        }
+      }
     }
+  } else {
+    handLandmarksRaw = Array.from({ length: 21 }, () => Array.from({ length: 3 }, () => 0)); 
   }
-  if (pose_results.landmarks) {
-    for (const landmark of pose_results.landmarks) {
+  if (poseResults.landmarks) {
+    for (const landmark of poseResults.landmarks) {
+      // console.log("pose", landmark);
+      myResults.push(landmark);
       drawingUtils.drawLandmarks(landmark, {
         radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1)
       });
       drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
+      for (let j = 0; j < 33; j ++) {
+        if (landmark.hasOwnProperty(j)) {
+          poseLandmarksRaw.push([landmark[j].x, landmark[j].y, landmark[j].z]);
+        }
+      }
     }
+  } else {
+    poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
   }
+  let allLandmarksConcat = poseLandmarksRaw.concat(handLandmarksRaw);
+  rawLandmarks.push(allLandmarksConcat);
+  if (rawLandmarks.length > 30) {
+    let rawLandmarksCopy = JSON.parse(JSON.stringify(rawLandmarks));
+    console.log(rawLandmarksCopy.length);
+    rawLandmarks = [];
+    // rawLandmarksCopy.slice(-30);
+    sendData(rawLandmarksCopy);
+  }
+  
+  // console.log("detect", last_hand_detect_time);
+  if (last_hand_detect_time != -1 && Date.now() - last_hand_detect_time > 5000) {
+    console.log("No hands detected for 5 seconds. Clearing predicted words.")
+  }
+  // console.log(myResults)
   canvasCtx.restore();
-
+  // processLandmarks(myResults);
   // Call this function again to keep predicting when the browser is ready.
   if (webcamRunning === true) {
     window.requestAnimationFrame(predictWebcam);
   }
 }
+
+function sendData(data) {
+  // Assuming `landmarks` is your array of numbers
+  // console.log(data)
+  fetch('/translate/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+
+    },
+    body: JSON.stringify({ "landmarks": data }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    // Handle response from backend
+    console.log(data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+// let rawLandmarks = [];
+// function truncateLandmarks() {
+//   let rawResults = [];
+//   frameCount += 1;
+//   if (frameCount > 30) {
+//     rawResults = myResults;
+//     myResults = [];
+//     frameCount = 0;
+//     // console.log(rawResults)
+//     rawLandmarks = processLandmarks(rawResults);
+//   }
+// }
+
+
+// // Sends a new request to update the to-do list
+// function getTranslation() {
+//   let xhr = new XMLHttpRequest()
+//   xhr.onreadystatechange = function() {
+//       if (this.readyState !== 4) return
+//       updatePage(xhr)
+//   }
+
+//   xhr.open("GET", "/ajax_todolist/get-list", true)
+//   xhr.send()
+// }
+
+
+// function updatePage(xhr) {
+//   if (xhr.status === 200) {
+//       let response = JSON.parse(xhr.responseText)
+//       updateList(response)
+//       return
+//   }
+
+//   if (xhr.status === 0) {
+//       displayError("Cannot connect to server")
+//       return
+//   }
+
+
+//   if (!xhr.getResponseHeader('content-type') === 'application/json') {
+//       displayError(`Received status = ${xhr.status}`)
+//       return
+//   }
+
+//   let response = JSON.parse(xhr.responseText)
+//   if (response.hasOwnProperty('error')) {
+//       displayError(response.error)
+//       return
+//   }
+
+//   displayError(response)
+// }
+
+// function displayError(message) {
+//   let errorElement = document.getElementById("error")
+//   errorElement.innerHTML = message
+// }

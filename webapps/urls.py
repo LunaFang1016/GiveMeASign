@@ -21,4 +21,5 @@ from givemeasign import views
 urlpatterns = [
     # path(r'^admin/', include(admin.site.urls)),
     path('', views.index, name="index"),
+    path('translate/', views.translate, name="translate")
 ]
