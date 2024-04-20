@@ -174,11 +174,21 @@ async function predictWebcam() {
   } else {
     poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
   }
+  if (poseLandmarksRaw.length != 33) {
+    poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
+  }
+  if (handLandmarksRaw.length == 0) {
+    handLandmarksRaw = Array.from({ length: 42 }, () => Array.from({ length: 3 }, () => 0)); 
+  } else if (handLandmarksRaw.length == 21) {
+    let oneHandLandmarksZero = Array.from({ length: 21 }, () => Array.from({ length: 3 }, () => 0));
+    handLandmarksRaw = handLandmarksRaw.concat(oneHandLandmarksZero);
+  }
   let allLandmarksConcat = poseLandmarksRaw.concat(handLandmarksRaw);
+  // console.log(allLandmarksConcat);
   rawLandmarks.push(allLandmarksConcat);
   if (rawLandmarks.length > 30) {
     let rawLandmarksCopy = JSON.parse(JSON.stringify(rawLandmarks));
-    console.log(rawLandmarksCopy.length);
+    // console.log(rawLandmarksCopy.length);
     rawLandmarks = [];
     // rawLandmarksCopy.slice(-30);
     sendData(rawLandmarksCopy);
