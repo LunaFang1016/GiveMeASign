@@ -13,8 +13,9 @@ from keras.models import load_model
 # client = OpenAI()
 
 # model_path =  os.path.join(os.path.dirname(os.path.dirname(__file__)),'givemeasign/assets/signs_10.h5')
-# model = load_model(model_path)
-# labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
+model_path = "givemeasign/assets/signs_10.h5"
+model = load_model(model_path)
+labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
 
 # model = load_model('signs_20.h5')
 # labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you",
@@ -164,14 +165,59 @@ def index(request):
 #         cap.release()
 #         cv2.destroyAllWindows()
 
+def structure_landmarks(landmarks_data):
+    num_frames = len(landmarks_data)
+
+    all_landmarks = []
+
+    for frame_index in range(num_frames):
+        print(frame_index)
+        frame_landmarks = landmarks_data[frame_index]
+
+        # Extract pose landmarks (landmarks 43-75)
+        pose_landmarks = np.array([lm for lm in frame_landmarks[42:75]]).flatten()
+        print("pose" , pose_landmarks)
+
+        # Extract hand landmarks (landmarks 1-42)
+        hand_landmarks = np.array([lm for lm in frame_landmarks[:42]]).flatten()
+        
+        landmarks_per_frame = np.concatenate([pose_landmarks, hand_landmarks])
+        
+        all_landmarks.append(landmarks_per_frame)
+        print("len", len(all_landmarks))
+
+    if len(all_landmarks) >= 30:
+        print("am i here")
+        all_landmarks_np = np.array(all_landmarks)
+        features = all_landmarks_np[-30:]
+        features_reshaped = features.reshape(1, 30, -1)
+        
+        prediction = model.predict(features_reshaped)
+        predicted_class_index = np.argmax(prediction)
+        predicted_class = labels[predicted_class_index]
+
+        for i, prob in enumerate(prediction[0]):
+            print(f"{labels[i]}: {prob:.4f}")
+        
+        print("Predicted class:", predicted_class)
+        # predicted_words.append(predicted_class)
+        all_landmarks.clear()
+        return predicted_class
+
+
+
 @csrf_exempt
 def translate(request):
     if request.method == 'POST':
         landmarks = json.loads(request.body)
         landmarks = landmarks.get('landmarks')
-        print(landmarks)
-        landmarks_np = np.array(landmarks)
-        print(landmarks_np.shape)
+        # print(landmarks)
+        # landmarks_np = np.array(landmarks)
+        # print(landmarks_np.shape)
+        
+        predicted_class = structure_landmarks(landmarks)
+        
+        
         # features_reshaped = landmarks_np.reshape(1, 30, -1)
         # print(features_reshaped)
         # Process landmarks using your ML model
@@ -181,10 +227,10 @@ def translate(request):
         # predicted_words = []
         # for i, prob in enumerate(prediction[0]):
         #     print(f"{labels[i]}: {prob:.4f}")
-        predicted_words = "This is prediction test"
+        # predicted_words = "This is prediction test"
         # print("Predicted class:", predicted_class)
         # predicted_words.append(predicted_class)
         # Return prediction as JSON response
-        return JsonResponse({'prediction': predicted_words})
+        return JsonResponse({'prediction': predicted_class})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)

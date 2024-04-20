@@ -186,11 +186,12 @@ async function predictWebcam() {
   let allLandmarksConcat = poseLandmarksRaw.concat(handLandmarksRaw);
   // console.log(allLandmarksConcat);
   rawLandmarks.push(allLandmarksConcat);
-  if (rawLandmarks.length > 30) {
+  if (rawLandmarks.length > 29) {
     let rawLandmarksCopy = JSON.parse(JSON.stringify(rawLandmarks));
     // console.log(rawLandmarksCopy.length);
     rawLandmarks = [];
     // rawLandmarksCopy.slice(-30);
+    console.log("raw", rawLandmarksCopy)
     sendData(rawLandmarksCopy);
   }
   
