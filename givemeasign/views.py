@@ -21,7 +21,6 @@ predicted_words = []
 
 MIN_API_INTERVAL = 5  # Adjust as needed
 
-api_key="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"
 client = OpenAI(api_key=api_key)
 
 last_api_call_time = 0
