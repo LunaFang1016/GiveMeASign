@@ -165,16 +165,20 @@ def translate_llm(predicted_text):
 #         cv2.destroyAllWindows()
 # hands_empty_interval = 0
 previous_predicted_text = ''
+hands_empty_interval = 0
 
-def get_llm(predicted_words, last_hands_detected_time):
+def get_llm():
     global previous_predicted_text
+    global hands_empty_interval
+    global predicted_words
     curr_llm = ''
-    if last_hands_detected_time != -1 and time.time() - last_hands_detected_time > 5:
+    if hands_empty_interval > 5:
         print("end of sentence")
         # print("No hands detected for 5 seconds. Clearing predicted words.")
         # print(predicted_words)
         predicted_words = []
         frames_processed = 0
+        hands_empty_interval = 0
         previous_predicted_text = ''
         prev_llm = ''
         curr_llm = ''
@@ -189,7 +193,6 @@ def get_llm(predicted_words, last_hands_detected_time):
     return curr_llm
 
 def predict_words(landmarks_data):
-    last_hands_detected_time = -1
     num_frames = len(landmarks_data)
 
     all_landmarks = []
@@ -205,7 +208,8 @@ def predict_words(landmarks_data):
         # Extract hand landmarks (landmarks 1-42)
         hand_landmarks = np.array([lm for lm in frame_landmarks[33:75]]).flatten()
         if np.any(hand_landmarks):
-            last_hands_detected_time = time.time()
+            global hands_empty_interval
+            hands_empty_interval += 1
         
         landmarks_per_frame = np.concatenate([pose_landmarks, hand_landmarks])
         
@@ -229,7 +233,7 @@ def predict_words(landmarks_data):
         global predicted_words
         predicted_words.append(predicted_class)
         all_landmarks.clear()
-        return predicted_class, last_hands_detected_time
+        return predicted_class
 
 
 @csrf_exempt
@@ -242,8 +246,8 @@ def translate(request):
         # landmarks_np = np.array(landmarks)
         # print(landmarks_np.shape)
         
-        predicted_class, last_hands_detected_time = predict_words(landmarks)
-        sentence = get_llm(predicted_class, last_hands_detected_time)
+        predicted_class = predict_words(landmarks)
+        sentence = get_llm()
 
         
         
