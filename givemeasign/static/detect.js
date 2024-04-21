@@ -110,9 +110,9 @@ function enableCam(event) {
 let lastVideoTime = -1;
 let results = undefined;
 let poseResults = undefined;
-let last_hand_detect_time = -1;
 var myResults = [];
 let rawLandmarks = [];
+
 
 console.log(video);
 async function predictWebcam() {
@@ -120,7 +120,7 @@ async function predictWebcam() {
   canvasElement.style.height = video.videoHeight;
   canvasElement.width = video.videoWidth;
   canvasElement.height = video.videoHeight;
-  let poseLandmarksRaw = [];
+  let poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
   let handLandmarksRaw = [];
   
   // Now let's start detecting the stream.
@@ -138,7 +138,6 @@ async function predictWebcam() {
   canvasCtx.save();
   canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
   if (results.landmarks) {
-    last_hand_detect_time = Date.now();
     for (const landmarks of results.landmarks) {
       // myResults.push(landmarks);
       // console.log("hands", landmarks);
@@ -171,8 +170,6 @@ async function predictWebcam() {
         }
       }
     }
-  } else {
-    poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
   }
   if (poseLandmarksRaw.length != 33) {
     poseLandmarksRaw = Array.from({ length: 33 }, () => Array.from({ length: 3 }, () => 0)); 
@@ -186,18 +183,13 @@ async function predictWebcam() {
   let allLandmarksConcat = poseLandmarksRaw.concat(handLandmarksRaw);
   // console.log(allLandmarksConcat);
   rawLandmarks.push(allLandmarksConcat);
-  if (rawLandmarks.length > 29) {
+  if (rawLandmarks.length >= 30) {
     let rawLandmarksCopy = JSON.parse(JSON.stringify(rawLandmarks));
     // console.log(rawLandmarksCopy.length);
     rawLandmarks = [];
     // rawLandmarksCopy.slice(-30);
     console.log("raw", rawLandmarksCopy)
     sendData(rawLandmarksCopy);
-  }
-  
-  // console.log("detect", last_hand_detect_time);
-  if (last_hand_detect_time != -1 && Date.now() - last_hand_detect_time > 5000) {
-    console.log("No hands detected for 5 seconds. Clearing predicted words.")
   }
   // console.log(myResults)
   canvasCtx.restore();
