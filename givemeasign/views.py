@@ -10,14 +10,19 @@ import time
 # import mediapipe as mp
 from keras.models import load_model
 from openai import OpenAI
-client = OpenAI()
+# client = OpenAI()
 
 # model_path =  os.path.join(os.path.dirname(os.path.dirname(__file__)),'givemeasign/assets/signs_10.h5')
 model_path = "givemeasign/assets/signs_10.h5"
 model = load_model(model_path)
 labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
 
+predicted_words = []
+
 MIN_API_INTERVAL = 5  # Adjust as needed
+
+api_key="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"
+client = OpenAI(api_key=api_key)
 
 last_api_call_time = 0
 # Create your views here.
@@ -195,11 +200,11 @@ def predict_words(landmarks_data):
         frame_landmarks = landmarks_data[frame_index]
 
         # Extract pose landmarks (landmarks 43-75)
-        pose_landmarks = np.array([lm for lm in frame_landmarks[42:75]]).flatten()
+        pose_landmarks = np.array([lm for lm in frame_landmarks[:33]]).flatten()
         # print("pose" , pose_landmarks)
 
         # Extract hand landmarks (landmarks 1-42)
-        hand_landmarks = np.array([lm for lm in frame_landmarks[:42]]).flatten()
+        hand_landmarks = np.array([lm for lm in frame_landmarks[33:75]]).flatten()
         if np.any(hand_landmarks):
             last_hands_detected_time = time.time()
         
@@ -222,7 +227,8 @@ def predict_words(landmarks_data):
             print(f"{labels[i]}: {prob:.4f}")
         
         print("Predicted class:", predicted_class)
-        # predicted_words.append(predicted_class)
+        global predicted_words
+        predicted_words.append(predicted_class)
         all_landmarks.clear()
         return predicted_class, last_hands_detected_time
 

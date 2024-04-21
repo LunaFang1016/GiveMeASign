@@ -166,7 +166,8 @@ async function predictWebcam() {
       drawingUtils.drawConnectors(landmark, PoseLandmarker.POSE_CONNECTIONS);
       for (let j = 0; j < 33; j ++) {
         if (landmark.hasOwnProperty(j)) {
-          poseLandmarksRaw.push([landmark[j].x, landmark[j].y, landmark[j].z]);
+          poseLandmarksRaw[j]=[landmark[j].x, landmark[j].y, landmark[j].z];
+          // console.log("j",  poseLandmarksRaw[j])
         }
       }
     }
@@ -188,7 +189,7 @@ async function predictWebcam() {
     // console.log(rawLandmarksCopy.length);
     rawLandmarks = [];
     // rawLandmarksCopy.slice(-30);
-    console.log("raw", rawLandmarksCopy)
+    // console.log("raw", rawLandmarks)
     sendData(rawLandmarksCopy);
   }
   // console.log(myResults)
