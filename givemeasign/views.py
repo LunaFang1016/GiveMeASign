@@ -131,7 +131,9 @@ def predict_words(landmarks_data):
         
         print("Predicted class:", predicted_class)
         global predicted_words
-        predicted_words.append(predicted_class)
+        print("predicted_words here", predicted_words)
+        if predicted_words == [] or (len(predicted_words) >= 1 and (predicted_class != predicted_words[-1])):
+            predicted_words.append(predicted_class)
         all_landmarks.clear()
         return predicted_class
 

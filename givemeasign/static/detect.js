@@ -217,7 +217,10 @@ function sendData(data) {
     // Handle response from backend
     console.log(data);
     const predictionElement = document.getElementById('predictedText');
-    predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
+    if (data.predicted_sentence != "") {
+      predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
+    }
+    
   })
   .catch(error => {
     console.error('Error:', error);

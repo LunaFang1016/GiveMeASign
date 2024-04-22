@@ -34,8 +34,8 @@ em {
 }
 
 video {
-  /* width: 80%;
-  height: 60%; */
+  width: 80%;
+  height: 60%;
   clear: both;
   display: block;
   transform: rotateY(180deg);
@@ -95,16 +95,16 @@ footer {
 }
 
 .canvas {
-  /* width: 80%;
-  height: 60%; */
+  width: 80%;
+  height: 60%;
   z-index: 1;
   position: absolute;
   pointer-events: none;
 }
 
 .output_canvas {
-  /* width: 80%;
-  height: 60%; */
+  width: 80%;
+  height: 100%;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
