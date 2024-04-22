@@ -144,9 +144,9 @@ async function predictWebcam() {
       // console.log("keys", Object.keys(landmarks));
       drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
         color: "#00FF00",
-        lineWidth: 5
+        lineWidth: 4
       });
-      drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 2 });
+      drawLandmarks(canvasCtx, landmarks, { color: "#FF0000", lineWidth: 1 });
       for (let j = 0; j < 21; j ++) {
         if (landmarks.hasOwnProperty(j)) {
           handLandmarksRaw.push([landmarks[j].x, landmarks[j].y, landmarks[j].z]);
@@ -216,6 +216,8 @@ function sendData(data) {
   .then(data => {
     // Handle response from backend
     console.log(data);
+    const predictionElement = document.getElementById('predictedText');
+    predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
   })
   .catch(error => {
     console.error('Error:', error);
