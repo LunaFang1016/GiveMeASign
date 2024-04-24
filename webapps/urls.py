@@ -20,6 +20,8 @@ from givemeasign import views
 
 urlpatterns = [
     # path(r'^admin/', include(admin.site.urls)),
-    path('', views.index, name="index"),
-    path('translate/', views.translate, name="translate")
+    path('detect', views.index, name="index"),
+    path('translate/', views.translate, name="translate"),
+    path('', views.home, name='home'),
+    path('instructions', views.instructions, name='instructions')
 ]
