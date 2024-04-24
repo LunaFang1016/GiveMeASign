@@ -36,6 +36,9 @@ em {
 video {
   width: 80%;
   height: 60%;
+  margin: -3vw;
+  /* margin-left:-4vw;
+  margin-top: -5vw; */
   clear: both;
   display: block;
   transform: rotateY(180deg);
@@ -70,7 +73,7 @@ footer {
 .detectOnClick {
   position: relative;
   float: left;
-  width: 45vw;
+  width: 30vw;
   margin: 2% 1%;
   cursor: pointer;
 }
@@ -97,14 +100,19 @@ footer {
 .canvas {
   width: 80%;
   height: 60%;
+  /* margin-left:-4vw;
+  margin-top: -5vw; */
   z-index: 1;
   position: absolute;
   pointer-events: none;
 }
 
 .output_canvas {
+  /* margin-left:-4vw;
+  margin-top: -5vw; */
+  margin: -3vw;
   width: 80%;
-  height: 100%;
+  height: 150%;
   transform: rotateY(180deg);
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
@@ -121,15 +129,23 @@ footer {
 .flex-container {
   display: flex;
   height: 50vh;
-  align-items: center;
+  flex-direction: column;
 }
 
 .predictResult {
-  width: 45vw;
+  width: 97vw;
   height: 48vh;
   float: right;
-  background-color: silver;
-  font-size: 3ch;
+  /* background-color: silver; */
+  font-size: 5ch;
   font-family:'Courier New', Courier, monospace;
-  color:lightcoral;
+  color:rgb(0, 0, 0);
+  text-align: center;
+  margin-left:-2vw;
+  margin-top: 7vw;
+}
+#webcamButton {
+  position: absolute;
+  bottom: 5vh; /* Adjust this value to set the distance from the bottom */
+  right: 5vw; /* Adjust this value to set the distance from the right */
 }
