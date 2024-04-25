@@ -21,7 +21,7 @@ predicted_words = []
 
 MIN_API_INTERVAL = 5  # Adjust as needed
 
-client = OpenAI(api_key=api_key)
+client = OpenAI()
 
 last_api_call_time = 0
 # Create your views here.
