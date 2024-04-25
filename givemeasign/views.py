@@ -157,3 +157,9 @@ def translate(request):
         return JsonResponse({'prediction': predicted_class, 'predicted_sentence': sentence})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
+
+def home(request):
+    return render(request, 'home.html')
+
+def instructions(request):
+    return render(request, 'instructions.html')

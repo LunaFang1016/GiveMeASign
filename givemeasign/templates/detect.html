@@ -23,26 +23,36 @@ limitations under the License. -->
 </head>
 
 <body>
-  <h1>GiveMeASign: Sign Language Translator</h1>
+  <!-- <h1 class="title">GiveMeASign: Sign Language Translator</h1> -->
 
   <section id="demos" class="invisible">
 
-    <!-- <h2>Demo: Webcam continuous landmarks detection</h2> -->
-    <p>Instructions: Click 'Enable Webcam' to start your video.
+    <!-- <p>Instructions: Click 'Enable Webcam' to start your video.
       Once video and landmarks are loaded (might take a few seconds), start signing on the screen
       and watch your translated text appear. Click 'Disable Predictions' to stop predicting gestures.
-    </p>
+    </p> -->
     <div id="mainSection" class="flex-container">
       <div id="liveView" class="videoView">
-        <button id="webcamButton" class="mdc-button mdc-button--raised">
-          <span class="mdc-button__ripple"></span>
-          <span class="mdc-button__label">ENABLE WEBCAM</span>
-        </button>
-        <div style="position: relative;">
+        
+        <div>
           <video id="webcam" style="position: abso" autoplay playsinline></video>
           <canvas class="output_canvas" id="output_canvas" style="position: absolute; left: 0px; top: 0px;"></canvas>
         </div>
       </div>
       <div id="predictedText" class="predictResult"></div>
     </div>
+    
+    <div clas="buttonContainer">
+    <button id="webcamButton" class="mdc-button mdc-button--raised">
+      <span class="mdc-button__ripple"></span>
+      <span class="mdc-button__label">ENABLE WEBCAM</span>
+    </button>
+    <a href="{% url 'home' %}">
+    <button id="homeButton" class="mdc-button mdc-button--raised">
+      <span class="mdc-button__ripple"></span>
+      <span href="home.html"  class="mdc-button__label">HOME</span>
+    </button>
+  </a>
+  </div>
   </section>
+  

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        p {
+            max-width: 80%;
+            line-height: 1.6;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007f8b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="container">
+    <p>Instructions: 
+        <br>
+        From the home page, click "Show Screen" to go to the detect page.
+        <br>
+        On that page, click 'Enable Webcam' to start your video.
+        <br>
+        Wait about 10 seconds to load the video and landmakrs
+        <br>
+        Once loaded, start signing on the screen and watch your translated text appear. 
+        <br>
+        Click 'Disable Predictions' to stop predicting gestures.
+    </p>
+    <a href="{% url 'home' %}">
+        <button>Home</button>
+    </a>
+</body>
+</html>

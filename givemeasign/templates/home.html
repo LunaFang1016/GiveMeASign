@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GiveMeASign</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007f8b;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+        /* For small screens */
+        @media only screen and (max-height: 680px) {
+            .home_image_top {
+                max-width: 20vw; /* Adjust as needed */
+                margin-top: 50vw;
+            }
+        }
+        
+        /* For larger screens */
+        @media only screen and (min-height: 681px) {
+            .home_image_top {
+                max-width: 20vw;
+                margin-top: 5vw;
+            }
+        }
+        .home_image_bottom {
+            margin: 0vw;
+            margin-bottom: 5vw;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 class="title" style="color:#007f8b">GiveMeASign: Sign Language Translator</h1>
+    <div class="container">
+        <img src="../static/images.jpeg" class="home_image_top" alt="Your Image">
+        <a href="{% url 'index' %}">
+            <button id="showScreen">Show Screen</button>
+        </a>
+        <a href="{% url 'instructions' %}">
+            <button id="instructions">Instructions</button>
+        </a>
+        <img src="../static/360_F_372507550_OBGPli5yA17fX9jm1n66UN86GRWnan8o.jpeg" class="home_image_bottom" alt="Your Image">
+    </div>
+</body>
+</html>
