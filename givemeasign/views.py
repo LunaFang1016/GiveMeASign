@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
+from django.middleware.csrf import get_token
 
 # import cv2
 import os
@@ -138,7 +139,7 @@ def predict_words(landmarks_data):
         return predicted_class
 
 
-@csrf_exempt
+# @csrf_exempt
 def translate(request):
     if request.method == 'POST':
         landmarks = json.loads(request.body)

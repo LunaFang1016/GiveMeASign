@@ -110,7 +110,6 @@ function enableCam(event) {
 let lastVideoTime = -1;
 let results = undefined;
 let poseResults = undefined;
-var myResults = [];
 let rawLandmarks = [];
 
 
@@ -159,7 +158,6 @@ async function predictWebcam() {
   if (poseResults.landmarks) {
     for (const landmark of poseResults.landmarks) {
       // console.log("pose", landmark);
-      myResults.push(landmark);
       drawingUtils.drawLandmarks(landmark, {
         radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1)
       });
@@ -201,14 +199,16 @@ async function predictWebcam() {
   }
 }
 
+let csrfTokenIndex = document.cookie.indexOf('csrftoken')
+var csrfToken = document.cookie.slice(csrfTokenIndex + 'csrftoken='.length)
+
 function sendData(data) {
-  // Assuming `landmarks` is your array of numbers
   // console.log(data)
   fetch('/translate/', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-
+        'X-CSRFToken': csrfToken,
     },
     body: JSON.stringify({ "landmarks": data }),
   })
@@ -226,61 +226,3 @@ function sendData(data) {
     console.error('Error:', error);
   });
 }
-// let rawLandmarks = [];
-// function truncateLandmarks() {
-//   let rawResults = [];
-//   frameCount += 1;
-//   if (frameCount > 30) {
-//     rawResults = myResults;
-//     myResults = [];
-//     frameCount = 0;
-//     // console.log(rawResults)
-//     rawLandmarks = processLandmarks(rawResults);
-//   }
-// }
-
-
-// // Sends a new request to update the to-do list
-// function getTranslation() {
-//   let xhr = new XMLHttpRequest()
-//   xhr.onreadystatechange = function() {
-//       if (this.readyState !== 4) return
-//       updatePage(xhr)
-//   }
-
-//   xhr.open("GET", "/ajax_todolist/get-list", true)
-//   xhr.send()
-// }
-
-
-// function updatePage(xhr) {
-//   if (xhr.status === 200) {
-//       let response = JSON.parse(xhr.responseText)
-//       updateList(response)
-//       return
-//   }
-
-//   if (xhr.status === 0) {
-//       displayError("Cannot connect to server")
-//       return
-//   }
-
-
-//   if (!xhr.getResponseHeader('content-type') === 'application/json') {
-//       displayError(`Received status = ${xhr.status}`)
-//       return
-//   }
-
-//   let response = JSON.parse(xhr.responseText)
-//   if (response.hasOwnProperty('error')) {
-//       displayError(response.error)
-//       return
-//   }
-
-//   displayError(response)
-// }
-
-// function displayError(message) {
-//   let errorElement = document.getElementById("error")
-//   errorElement.innerHTML = message
-// }
