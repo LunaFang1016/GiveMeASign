@@ -1,5 +1,5 @@
 Django==3.2.10
 numpy==1.22.1
-keras==2.8.0
+keras==2.13.1
 openai==0.11.0
 tensorflow==2.13.1
