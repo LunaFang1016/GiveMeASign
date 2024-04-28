@@ -139,7 +139,7 @@ def predict_words(landmarks_data):
         return predicted_class
 
 
-# @csrf_exempt
+@csrf_exempt
 def translate(request):
     if request.method == 'POST':
         landmarks = json.loads(request.body)

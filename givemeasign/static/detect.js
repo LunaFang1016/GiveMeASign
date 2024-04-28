@@ -199,8 +199,8 @@ async function predictWebcam() {
   }
 }
 
-let csrfTokenIndex = document.cookie.indexOf('csrftoken')
-var csrfToken = document.cookie.slice(csrfTokenIndex + 'csrftoken='.length)
+// let csrfTokenIndex = document.cookie.indexOf('csrftoken')
+// var csrfToken = document.cookie.slice(csrfTokenIndex + 'csrftoken='.length)
 
 function sendData(data) {
   // console.log(data)
@@ -208,7 +208,7 @@ function sendData(data) {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
-        'X-CSRFToken': csrfToken,
+        // 'X-CSRFToken': csrfToken,
     },
     body: JSON.stringify({ "landmarks": data }),
   })
