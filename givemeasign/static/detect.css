@@ -154,3 +154,9 @@ footer {
   bottom: 5vh;
   right: 85vw;
 }
+
+#bleButton {
+  position: absolute;
+  bottom: 5vh;
+  right: 42vw;
+}
