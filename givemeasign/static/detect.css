@@ -154,3 +154,8 @@ footer {
   bottom: 5vh;
   right: 85vw;
 }
+#countdown {
+  position: absolute;
+  bottom: 5vh;
+  right: 40vw;
+}
