@@ -93,6 +93,20 @@ function enableCam(event) {
   } else {
     webcamRunning = true;
     enableWebcamButton.innerText = "DISABLE PREDICTIONS";
+    const countdownText = document.getElementById("countdown");
+    countdownText.innerText = "Wait about 5 seconds until translation";
+  //   setTimeout(() => {
+  //     countdownText.innerText = "translation now available";
+  // }, 1000); 
+  setTimeout(() => {
+    countdownText.innerText = "Translation is now available!";
+
+    // Wait for another 3 seconds before making the text blank
+    setTimeout(() => {
+        countdownText.innerText = "";
+    }, 3000); // 3000 milliseconds = 3 seconds delay
+
+}, 1000); // 1000 milliseconds = 1 second delay
   }
 
   // getUsermedia parameters.
