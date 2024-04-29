@@ -3,3 +3,4 @@ numpy==1.22.1
 keras==2.13.1
 openai==0.11.0
 tensorflow-cpu==2.13.1
+django-sslserver==0.22
