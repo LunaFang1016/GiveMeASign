@@ -156,6 +156,9 @@ footer {
 }
 #countdown {
   position: absolute;
-  bottom: 5vh;
-  right: 40vw;
+  top: 5vh;
+  right: 42vw;
+  font-size: 3ch;
+  font-family: 'Courier New', Courier, monospace;
+  color: #007f8b;
 }

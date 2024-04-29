@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'givemeasign',
-    # 'webpack_loader'
+    'sslserver'
 ]
 
 MIDDLEWARE = [
