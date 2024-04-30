@@ -154,6 +154,14 @@ footer {
   bottom: 5vh;
   right: 85vw;
 }
+#countdown {
+  position: absolute;
+  top: 5vh;
+  right: 42vw;
+  font-size: 3ch;
+  font-family: 'Courier New', Courier, monospace;
+  color: #007f8b;
+}
 
 #bleButton {
   position: absolute;
