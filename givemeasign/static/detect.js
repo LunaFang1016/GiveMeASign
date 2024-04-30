@@ -62,13 +62,14 @@ function gotCharacteristics(error, characteristics) {
   // sendMessage()
 }
 
-
+let prevSent = '';
 function sendMessage(resultText, isEndSentence) {  
   // let rawSentence = document.getElementById("predictedText").innerHTML;
   let sentence = '@' + resultText;
   // let sentence = "Hhihi"
-  console.log("sentence", sentence);
-  if (sentence && isEndSentence) {
+  // console.log("sentence", sentence);
+  if (resultText != prevSent && sentence && isEndSentence) {
+    prevSent = resultText;
     console.log("begin sending", isEndSentence)
     let index = 0;
     let intervalId = setInterval(() => {

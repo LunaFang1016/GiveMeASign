@@ -75,7 +75,7 @@ def get_llm():
     global previous_predicted_text
     global hands_empty_interval
     global predicted_words
-    global end_of_sentence
+    # global end_of_sentence
     global prev_llm
     global curr_llm
     if hands_empty_interval > 150:
@@ -86,7 +86,7 @@ def get_llm():
         frames_processed = 0
         hands_empty_interval = 0
         previous_predicted_text = ''
-        # prev_llm = ''
+        prev_llm = curr_llm
         curr_llm = ''
         return prev_llm, curr_llm, True
     else:
