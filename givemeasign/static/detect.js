@@ -63,12 +63,13 @@ function gotCharacteristics(error, characteristics) {
 }
 
 
-function sendMessage(resultText) {  
+function sendMessage(resultText, isEndSentence) {  
   // let rawSentence = document.getElementById("predictedText").innerHTML;
   let sentence = '@' + resultText;
   // let sentence = "Hhihi"
   console.log("sentence", sentence);
-  if (sentence) {
+  if (sentence && isEndSentence) {
+    console.log("begin sending", isEndSentence)
     let index = 0;
     let intervalId = setInterval(() => {
       if (index < sentence.length) {
@@ -294,14 +295,16 @@ function sendData(data) {
     body: JSON.stringify({ "landmarks": data }),
   })
   .then(response => response.json())
-  .then(async(data) => {
+  .then(data => {
     // Handle response from backend
     console.log(data);
     const predictionElement = document.getElementById('predictedText');
     if (data.predicted_sentence != "") {
       predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
     }
-    await sendMessage(data.predicted_sentence);
+    if (data.end_of_sentence) {
+      sendMessage(data.prev_predicted_sentence, data.end_of_sentence);
+    }
   })
 
   .catch(error => {

@@ -67,12 +67,17 @@ def translate_llm(predicted_text):
 
 previous_predicted_text = ''
 hands_empty_interval = 0
+# end_of_sentence = False
+curr_llm = ''
+prev_llm = ''
 
 def get_llm():
     global previous_predicted_text
     global hands_empty_interval
     global predicted_words
-    curr_llm = ''
+    global end_of_sentence
+    global prev_llm
+    global curr_llm
     if hands_empty_interval > 150:
         print("end of sentence")
         # print("No hands detected for 5 seconds. Clearing predicted words.")
@@ -81,9 +86,9 @@ def get_llm():
         frames_processed = 0
         hands_empty_interval = 0
         previous_predicted_text = ''
-        prev_llm = ''
+        # prev_llm = ''
         curr_llm = ''
-        return curr_llm
+        return prev_llm, curr_llm, True
     else:
         # Update previous and current predicted text
         current_predicted_text = " ".join(predicted_words)
@@ -91,7 +96,7 @@ def get_llm():
             previous_predicted_text = current_predicted_text
             prev_llm = curr_llm
             curr_llm = translate_llm(previous_predicted_text)
-    return curr_llm
+    return prev_llm, curr_llm, False
 
 def predict_words(landmarks_data):
     num_frames = len(landmarks_data)
@@ -150,11 +155,13 @@ def translate(request):
         # print(landmarks_np.shape)
         
         predicted_class = predict_words(landmarks)
-        sentence = get_llm()
+        end_of_sentence = False
+        prev_sentence, sentence, end_of_sentence = get_llm()
 
         
         
-        return JsonResponse({'prediction': predicted_class, 'predicted_sentence': sentence})
+        return JsonResponse({'prediction': predicted_class, 'prev_predicted_sentence': prev_sentence, 
+                             'predicted_sentence': sentence, 'end_of_sentence': end_of_sentence})
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)
 
