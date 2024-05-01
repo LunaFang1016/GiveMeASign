@@ -69,7 +69,7 @@ function sendMessage(resultText, isEndSentence) {
   // let sentence = "Hhihi"
   // console.log("sentence", sentence);
   if (resultText != prevSent && sentence && isEndSentence) {
-    
+    prevSent = resultText;
     console.log("begin sending", isEndSentence)
     let index = 0;
     let intervalId = setInterval(() => {
@@ -82,7 +82,6 @@ function sendMessage(resultText, isEndSentence) {
         clearInterval(intervalId); // Stop the interval when all letters are sent
       }
     }, 1000);
-    prevSent = resultText;
   }
   // console.log("current index: " + index);
 
