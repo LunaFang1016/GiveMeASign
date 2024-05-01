@@ -29,9 +29,9 @@ let runningMode = "IMAGE";
 let enableWebcamButton = document.createElement("button");
 let webcamRunning = false;
 
-const serviceUuid = "1164f202-3472-44a3-9561-ac2d6b05356e";
+const serviceUuid = "23769b79-5549-4e20-9d0d-37d0a0a8603b";
 const characteristicsUUID = {
-  msg: "0e515ccd-5290-440c-add7-a93d60f022da"
+  msg: "739a7ad4-ab67-4292-818f-cdcc130e65e5"
 };
 
 let myCharacteristic;
@@ -81,7 +81,7 @@ function sendMessage(resultText, isEndSentence) {
       } else {
         clearInterval(intervalId); // Stop the interval when all letters are sent
       }
-    }, 1000);
+    }, 200);
   }
   // console.log("current index: " + index);
 

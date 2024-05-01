@@ -70,6 +70,7 @@ hands_empty_interval = 0
 # end_of_sentence = False
 curr_llm = ''
 prev_llm = ''
+stop_predict = False
 
 def get_llm():
     global previous_predicted_text
@@ -78,15 +79,18 @@ def get_llm():
     # global end_of_sentence
     global prev_llm
     global curr_llm
+    global stop_predict
     if hands_empty_interval > 150:
         print("end of sentence")
+        stop_predict = True
         # print("No hands detected for 5 seconds. Clearing predicted words.")
         # print(predicted_words)
         predicted_words = []
         frames_processed = 0
         hands_empty_interval = 0
         previous_predicted_text = ''
-        prev_llm = curr_llm
+        if curr_llm != "":
+            prev_llm = curr_llm
         curr_llm = ''
         return prev_llm, curr_llm, True
     else:
@@ -99,6 +103,7 @@ def get_llm():
     return prev_llm, curr_llm, False
 
 def predict_words(landmarks_data):
+    global stop_predict
     num_frames = len(landmarks_data)
 
     all_landmarks = []
@@ -113,16 +118,18 @@ def predict_words(landmarks_data):
 
         # Extract hand landmarks (landmarks 1-42)
         hand_landmarks = np.array([lm for lm in frame_landmarks[33:75]]).flatten()
-        if np.any(hand_landmarks):
+        if not np.any(hand_landmarks):
             global hands_empty_interval
             hands_empty_interval += 1
+        else:
+            stop_predict = False
         
         landmarks_per_frame = np.concatenate([pose_landmarks, hand_landmarks])
         
         all_landmarks.append(landmarks_per_frame)
         # print("len", len(all_landmarks))
 
-    if len(all_landmarks) >= 30:
+    if len(all_landmarks) >= 30 and not stop_predict:
         # print("am i here")
         all_landmarks_np = np.array(all_landmarks)
         features = all_landmarks_np[-30:]
@@ -142,6 +149,7 @@ def predict_words(landmarks_data):
             predicted_words.append(predicted_class)
         all_landmarks.clear()
         return predicted_class
+    return []
 
 
 @csrf_exempt
@@ -157,7 +165,8 @@ def translate(request):
         predicted_class = predict_words(landmarks)
         end_of_sentence = False
         prev_sentence, sentence, end_of_sentence = get_llm()
-
+        print("curr_llm: ", sentence)
+        print("prev_llm: ", prev_sentence)
         
         
         return JsonResponse({'prediction': predicted_class, 'prev_predicted_sentence': prev_sentence, 
