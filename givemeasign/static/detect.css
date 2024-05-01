@@ -162,3 +162,9 @@ footer {
   font-family: 'Courier New', Courier, monospace;
   color: #007f8b;
 }
+
+#bleButton {
+  position: absolute;
+  bottom: 5vh;
+  right: 42vw;
+}

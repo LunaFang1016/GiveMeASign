@@ -20,6 +20,7 @@ import {
   DrawingUtils
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
+
 const demosSection = document.getElementById("demos");
 
 let handLandmarker = undefined;
@@ -27,6 +28,74 @@ let poseLandmarker = undefined;
 let runningMode = "IMAGE";
 let enableWebcamButton = document.createElement("button");
 let webcamRunning = false;
+
+const serviceUuid = "23769b79-5549-4e20-9d0d-37d0a0a8603b";
+const characteristicsUUID = {
+  msg: "739a7ad4-ab67-4292-818f-cdcc130e65e5"
+};
+
+let myCharacteristic;
+let myBLE = new p5ble();
+// let myBLE;
+let msgCharacteristic;
+let input, submitButton;
+
+let connectButton = document.getElementById('bleButton')
+if (connectButton) {
+  console.log("connect button found")
+}
+
+connectButton.onclick = connectAndSend;
+
+
+function connectAndSend() {
+  console.log("connect and send called");
+  myBLE.connect(serviceUuid, gotCharacteristics);
+}
+
+function gotCharacteristics(error, characteristics) {
+  if (error) console.log('error: ', error);
+  console.log('characteristics: ', characteristics);
+  // Set the first characteristic as myCharacteristic
+  myCharacteristic = characteristics[0];
+ 
+  // sendMessage()
+}
+
+let prevSent = '';
+function sendMessage(resultText, isEndSentence) {  
+  // let rawSentence = document.getElementById("predictedText").innerHTML;
+  let sentence = '@' + resultText;
+  // let sentence = "Hhihi"
+  // console.log("sentence", sentence);
+  if (resultText != prevSent && sentence && isEndSentence) {
+    prevSent = resultText;
+    console.log("begin sending", isEndSentence)
+    let index = 0;
+    let intervalId = setInterval(() => {
+      if (index < sentence.length) {
+        let letter = sentence.charCodeAt(index);
+        console.log(letter);
+        myBLE.write(myCharacteristic, letter);
+        index++;
+      } else {
+        clearInterval(intervalId); // Stop the interval when all letters are sent
+      }
+    }, 200);
+  }
+  // console.log("current index: " + index);
+
+  // while (index < sentence.length) {
+  //   let letter = sentence.charCodeAt(index);
+  //   console.log(letter);
+  //   myBLE.write(myCharacteristic, letter);
+  //   index++;
+  // }
+  // return;
+}
+
+// sendMessage();
+// connectButton.onclick = connectAndSend;
 
 // Before we can use HandLandmarker and PoseLandmarker class we must wait for it to finish
 // loading. Machine Learning models can be large and take a moment to
@@ -234,9 +303,20 @@ function sendData(data) {
     if (data.predicted_sentence != "") {
       predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
     }
-    
+    if (data.end_of_sentence) {
+      sendMessage(data.prev_predicted_sentence, data.end_of_sentence);
+    }
   })
+
   .catch(error => {
     console.error('Error:', error);
   });
 }
+
+ 
+  // let sentence = "hello";
+  // console.log("length: " + sentence.length);
+  // for (let i = 0; i < sentence.length; i++) {
+  //   sendMessage(sentence.charCodeAt(i));
+  //   console.log(sentence.charCodeAt(i));
+  // }
