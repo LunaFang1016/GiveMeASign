@@ -168,3 +168,13 @@ footer {
   bottom: 5vh;
   right: 42vw;
 }
+
+#bleSuccess {
+  position: absolute;
+  bottom: 20vh;
+  right: 42vw;
+  font-size: 2ch;
+  font-style: bold;
+  font-family: 'Courier New', Courier, monospace;
+  color: #007f8b;
+}

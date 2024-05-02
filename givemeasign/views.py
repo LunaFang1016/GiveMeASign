@@ -19,6 +19,7 @@ model = load_model(model_path)
 labels = ["hello", "howAre", "love", "mask", "no", "please", "sorry", "thanks", "wear", "you"]
 
 predicted_words = []
+# generated_sentences = []
 
 MIN_API_INTERVAL = 5  # Adjust as needed
 
@@ -32,6 +33,8 @@ def index(request):
 
 def translate_llm(predicted_text):
     global last_api_call_time
+    # global generated_sentences
+    text = ''
 
     # Calculate time elapsed since the last API call
     current_time = time.time()
@@ -61,7 +64,38 @@ def translate_llm(predicted_text):
         if completion_message:
             text = completion_message.content
             print(text)
-    
+    # generated_sentences.append(text)
+
+    #  # Calculate time elapsed since the last API call
+    # current_time = time.time()
+    # time_elapsed = current_time - last_api_call_time
+
+    # # If the minimum API interval has not elapsed, wait before making the next call
+    # if time_elapsed < MIN_API_INTERVAL:
+    #     time.sleep(MIN_API_INTERVAL - time_elapsed)
+
+    # prompt = "You will be given two sentences, each structured by an earlier ChatGPT call. \n\n"
+    # prompt += "You don't need to retrieve previous answers,\n\n"
+    # prompt += "But if the two sentences have the similar meaning, please make them into one readable English sentence. \n\n"
+    # prompt += "For example, if you are given 'Hello no are you okay? ', translate it to 'hello please wear your mask'.\n\n"
+    # prompt += "If you are not given anything, do not translate anything.\n\n"
+    # prompt += "Here is the list of predicted words:\n"
+    # prompt += f"{predicted_text}\n"
+
+    # response = client.chat.completions.create(
+    #     model="gpt-3.5-turbo",  # Choose the appropriate GPT model
+    #     messages=[{"role": "system", "content": prompt}],
+    #     max_tokens=20,  # Adjust the length of generated text
+    #     n=10  # Number of texts to translate in a single request
+    # )
+    # # Update the timestamp of the last API call
+    # last_api_call_time = time.time()
+
+    # if response.choices:
+    #     completion_message = response.choices[0].message
+    #     if completion_message:
+    #         text = completion_message.content
+    #         print(text)
     return text
                 
 
