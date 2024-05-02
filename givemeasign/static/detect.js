@@ -82,7 +82,7 @@ function sendMessage(resultText, isEndSentence) {
       } else {
         clearInterval(intervalId); // Stop the interval when all letters are sent
       }
-    }, 800);
+    }, 1000);
   }
   // console.log("current index: " + index);
 
