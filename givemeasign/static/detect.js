@@ -45,7 +45,8 @@ if (connectButton) {
   console.log("connect button found")
 }
 
-connectButton.onclick = connectAndSend;
+// connectButton.onclick = connectAndSend;
+connectButton.addEventListener("click", connectAndSend);
 
 
 function connectAndSend() {
@@ -81,7 +82,7 @@ function sendMessage(resultText, isEndSentence) {
       } else {
         clearInterval(intervalId); // Stop the interval when all letters are sent
       }
-    }, 1000);
+    }, 800);
   }
   // console.log("current index: " + index);
 
