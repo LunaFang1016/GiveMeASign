@@ -55,12 +55,19 @@ function connectAndSend() {
 }
 
 function gotCharacteristics(error, characteristics) {
-  if (error) console.log('error: ', error);
+  let charSuccess = document.getElementById('bleSuccess');
+  if (error) {
+    console.log('error: ', error);
+    charSuccess.innerHTML = 'Sorry unsuccessful connection, please try again.';
+  }
   console.log('characteristics: ', characteristics);
   // Set the first characteristic as myCharacteristic
   myCharacteristic = characteristics[0];
- 
   // sendMessage()
+  charSuccess.innerHTML = 'BLE Connected!';
+  setTimeout(() => {
+    charSuccess.innerHTML = "";
+  }, 1000);
 }
 
 let prevSent = '';
@@ -304,7 +311,7 @@ function sendData(data) {
     if (data.predicted_sentence != "") {
       predictionElement.innerHTML = `Prediction: ${data.predicted_sentence}`;
     }
-    if (data.end_of_sentence) {
+    if (data.end_of_sentence && webcamRunning) {
       sendMessage(data.prev_predicted_sentence, data.end_of_sentence);
     }
   })
